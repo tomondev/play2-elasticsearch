@@ -1,13 +1,11 @@
 package com.github.cleverage.elasticsearch;
 
+import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import play.Logger;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class IndexUtils {
 
@@ -127,6 +125,13 @@ public abstract class IndexUtils {
             else {
                 return Float.valueOf(value.toString());
             }
+        }
+        else if (targetType.equals(UUID.class)) {
+            return UUID.fromString((String) value);
+        }
+        else if (targetType.equals(GeoPoint.class)) {
+            Map geoValuesMap = (Map) value;
+            return new GeoPoint((Double)geoValuesMap.get("lat"),(Double)geoValuesMap.get("lon"));
         }
         else {
             return value;
